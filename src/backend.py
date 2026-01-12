@@ -1,11 +1,21 @@
 import os
 import json
+import requests as req
+from bs4 import BeautifulSoup
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-
 # Configure Flask app for Cloud Run
 app = Flask(__name__, static_folder="../dist", static_url_path="")
+
+def scrape(url):
+    res = req.get(url)
+    print(f"Web scraping {url}")
+    # res.content("/images", url+"/images")
+    soup = BeautifulSoup(res.content, "html.parser")
+    result = soup.prettify()
+    result = result.replace("/images", url+"/images")
+    return result
 
 # Configure CORS based on environment
 if os.getenv("FLASK_ENV") == "production":
@@ -40,9 +50,13 @@ def webscrape():
         try:
             data = request.json
             url = data.get("url", "")
-
+            
             print(f"The url that was passed in is {url}")
-            return jsonify({"success": True})
+
+            content = scrape(url)
+            print("Content: ", content)
+            
+            return jsonify({"success": True, "content": content})
         except Exception as e:
             return jsonify({"success": False, "error": f"Server error: {str(e)}"}), 500
     
