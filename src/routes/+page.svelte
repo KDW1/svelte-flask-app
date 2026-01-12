@@ -2,8 +2,7 @@
 	let url = $state('');
 
 	const webScrape = async () => {
-		alert(`The url entered is ${"https://"+url}`);
-        let data = await fetch("/webscrape", {
+        let data = await fetch("http://localhost:8000/webscrape", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -20,24 +19,23 @@
 		This is <span class="font-bold">WebScrapy</span>
 	</p>
 	<p class="text-base text-gray-700">
-		Enter a URL <span class="italic">(without the "https://")</span> in the input and click submit to see what you can do
+		Enter a URL <span class="italic">(with the <span class="font-semibold">"https://"</span>)</span> in the input and click submit to see what you can do
 	</p>
-	<form onsubmit={()=>{
+	<form onsubmit={(e)=>{
+        e.preventDefault()
         webScrape()
     }} class="space-y-4">
 		<div
-			class="animated mya flex w-full gap-x-1 rounded px-2 py-2 lowercase outline-2 outline-gray-200 outline-dashed has-[input:focus-within]:outline-black has-[input:focus-within]:outline-solid has-[input:hover]:outline-black"
+			class="animated flex w-full gap-x-1 rounded px-2 py-2 lowercase outline-2 outline-gray-200 outline-dashed has-[input:focus-within]:outline-black has-[input:focus-within]:outline-solid has-[input:hover]:outline-black"
 		>
-			<p class="text-gray-700">https://</p>
 			<input
-				placeholder="www.ncregister.com/"
-				class="w-full font-semibold placeholder-gray-200 outline-none"
+				placeholder="https://www.ncregister.com/"
+				class="w-full font-semibold placeholder:font-normal placeholder-gray-200 outline-none"
 				bind:value={url}
 				oninput={() => {
 					url = url.replaceAll(/\s+/g, '');
-                    url = url.replaceAll("https://", "")
 				}}
-				type="text"
+				type="url"
 			/>
 		</div>
 		<button
