@@ -1,2 +1,8 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+@layer components {
+    .animated {
+        @apply duration-300 ease-in-out transition
+    }
+}
